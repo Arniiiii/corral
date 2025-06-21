@@ -56,7 +56,7 @@ add_library(
   corral/detail/wait.h
 )
 
-target_include_directories(corral INTERFACE ${CMAKE_CURRENT_SOURCE_DIR})
+target_include_directories(corral INTERFACE $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}> $<INSTALL_INTERFACE:include>)
 
 if(BUILD_TESTING)
 
@@ -154,12 +154,25 @@ endif()
 # Installation
 #
 
-install(DIRECTORY corral DESTINATION include)
-install(
-  TARGETS corral
-  EXPORT corralTargets
-  INCLUDES
-  DESTINATION include
+include(./cmake/getCPM.cmake)
+
+CPMAddPackage(
+  NAME PackageProject.cmake
+  URL "https://github.com/Arniiiii/PackageProject.cmake/archive/refs/tags/13.0.5.tar.gz"
+)
+
+
+packageProject(
+  NAME ${PROJECT_NAME}
+  VERSION ${PROJECT_VERSION}
+  NAMESPACE ${PROJECT_NAME}
+  BINARY_DIR ${PROJECT_BINARY_DIR}
+  INCLUDE_DIR ${PROJECT_SOURCE_DIR}/corral
+  INCLUDE_DESTINATION include/${PROJECT_NAME}
+  INCLUDE_HEADER_PATTERN "*.h"
+  VERSION_HEADER "${VERSION_HEADER_LOCATION}" EXPORT_HEADER
+                                              "${EXPORT_HEADER_LOCATION}"
+  COMPATIBILITY "AnyNewerVersion" DISABLE_VERSION_SUFFIX ON
 )
 
 #
