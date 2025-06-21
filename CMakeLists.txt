@@ -1,5 +1,17 @@
-cmake_minimum_required(VERSION 3.0)
-project(corral)
+cmake_minimum_required(VERSION 3.10)
+
+if(CORRAL_TEST_INSTALLED_VERSION) 
+  find_package(corral REQUIRED)
+
+  add_library(dummy_target INTERFACE)
+
+  target_link_libraries(dummy_target INTERFACE corral::corral)
+
+  return()
+endif()
+
+
+project(corral VERSION 0.0.1)
 
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
